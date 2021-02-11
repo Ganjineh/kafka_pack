@@ -1,7 +1,7 @@
 from kafka_pack import main
 from confluent_kafka import KafkaError
 
-c = main.consumer('ali-ali', 't1', 'sample')
+c = main.consumer('37.152.181.68:9092', 't1', 'sample')
 
 while True:
     msg = c.poll(1.0)
