@@ -1,5 +1,6 @@
 from confluent_kafka import Consumer, KafkaError
 from confluent_kafka import Producer
+import json
 
 
 def test(s):
@@ -14,7 +15,7 @@ def consumer(servers, group, topic):
             'auto.offset.reset': 'smallest'
         }
     })
-    c.subscribe([topic])
+    c.subscribe(['doge_backend','eth_backend','tron_backend'])
     return c
 
 
@@ -31,5 +32,5 @@ def delivery_report(err, msg):
 def producer(servers, topic, msg):
     p = Producer({'bootstrap.servers': servers})
     p.poll(0)
-    p.produce(topic, msg.encode('utf-8'), callback=delivery_report)
+    p.produce(topic, json.dumps(msg), callback=delivery_report)
     p.flush()
