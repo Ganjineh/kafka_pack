@@ -1,7 +1,6 @@
 from kafka_pack import main
 
-some_data_source = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1",
-                    "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+some_data_source = ["1"] * 100
 
 for data in some_data_source:
     # 'doge_backend','eth_backend','tron_backend'
