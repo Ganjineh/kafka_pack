@@ -1,5 +1,6 @@
 astroid==2.4.2
 autopep8==1.5.5
+confluent-kafka==1.6.0
 isort==5.7.0
 kafka-pack==0.1
 lazy-object-proxy==1.4.3
