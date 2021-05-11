@@ -1,8 +1,9 @@
-from kafka_pack import main
+from kafka_pack import consumer
 from confluent_kafka import KafkaError
 import json
+from constant import KAFKA_SERVERS, KAFKA_GROUPS, KAFKA_TOPICS
 
-c = main.consumer('37.152.181.68:9092', 't1', '')
+c = consumer(KAFKA_SERVERS, KAFKA_GROUPS, KAFKA_TOPICS)
 
 while True:
     msg = c.poll(1.0)
@@ -15,25 +16,8 @@ while True:
         else:
             print(msg.error())
             break
-    # print(msg.topic())
+    print(msg.topic())
     message = msg.value().decode('utf-8')
     message = json.loads(message)
     print('Received message: {}'.format(message))
-    # 'doge_micro','eth_micro','tron_micro'
-    if msg.topic() == 'doge_backend':
-        main.producer('37.152.181.68:9092', 'doge_micro', {'id': message['id'],
-                                                           'status_code': 500,
-                                                           'msg': 'some bad things happened!'
-                                                           })
-    elif msg.topic() == 'eth_backend':
-        main.producer('37.152.181.68:9092', 'eth_micro', {'id': message['id'],
-                                                          'status_code': 500,
-                                                          'msg': 'some bad things happened!'
-                                                          })
-    elif msg.topic() == 'tron_backend':
-        main.producer('37.152.181.68:9092', 'tron_micro', {'id': message['id'],
-                                                           'status_code': 500,
-                                                           'msg': 'some bad things happened!'
-                                                           })
-
 c.close()
