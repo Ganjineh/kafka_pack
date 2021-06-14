@@ -1,3 +1,3 @@
-from .main import consumer, producer
+from .main import consumer, producer, FlaskAppWrapper
 
-__all__ = ['consumer', 'producer']
+__version__ = '0.1'

@@ -1,0 +1,16 @@
+from kafka_pack import FlaskAppWrapper
+
+
+def balance(address):
+    return 'balance'
+
+
+def transaction(address):
+    return 'balance'
+
+
+a = FlaskAppWrapper(__name__,debug=True)
+a.add_endpoint(endpoint='/balance/<address>', endpoint_name='balance', handler=balance)
+a.add_endpoint(endpoint='/transaction/<address>',
+               endpoint_name='transaction', handler=transaction)
+a.run()
