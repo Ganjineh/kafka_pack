@@ -1,7 +1,9 @@
 from confluent_kafka import Consumer, KafkaError
 from confluent_kafka import Producer
 from flask import Flask, Response
+from .handlers import set_in_cache, get_from_cache, del_from_cache, is_in_cache
 import json
+import time
 
 
 def consumer(servers, group, topics):
@@ -53,3 +55,40 @@ class FlaskAppWrapper(object):
     def add_endpoint(self, endpoint=None, endpoint_name=None, handler=None):
         self.app.add_url_rule(endpoint, endpoint_name,
                               EndpointAction(handler, endpoint_name))
+
+
+class IsConfirm(object):
+    def __init__(self, action, kafka_servers, topics, block_time, callback):
+        self.action = action
+        self.kafka_servers = kafka_servers
+        self.topics = topics
+        self.block_time = block_time
+        self.callback = callback
+
+    def add_id_cache(self, txid, callback_id):
+        val = get_from_cache(str(self.topics[:15])+'_pendding')
+        if len(val) > 0:
+            val += "|"
+        val += str(txid)+","+str(callback_id)
+        set_in_cache(str(self.topics[:15])+'_pendding',
+                     val, 60*60)
+
+    def __call__(self):
+        while True:
+            val = get_from_cache(str(self.topics[:15])+'_pendding')
+            for i in str(val).split("|"):
+                if len(str(i)) == 0:
+                    continue
+                i = i.split(",")
+                res = self.action(str(i[0]))
+                if res[0]:
+                    ret = {
+                        'txid': str(i[0]),
+                        'callback_id':  str(i[0]),
+                        'status': res[1]
+                    }
+                    producer(self.kafka_servers,
+                             self.topics, ret, self.callback)
+
+            print("running...")
+            time.sleep(self.block_time)

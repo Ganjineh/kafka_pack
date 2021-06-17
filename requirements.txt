@@ -11,6 +11,7 @@ MarkupSafe==2.0.1
 mccabe==0.6.1
 pycodestyle==2.6.0
 pylint==2.6.0
+pymemcache==3.4.4
 six==1.15.0
 toml==0.10.2
 Werkzeug==2.0.1
