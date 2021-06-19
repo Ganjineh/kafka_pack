@@ -76,29 +76,31 @@ class IsConfirm(object):
 
     def __call__(self):
         thread = Thread(target=self.checking)
-        thread.setDaemon(True)
         thread.start()
 
     def checking(self):
         while True:
-            val = get_from_cache(str(self.topics[:15])+'_pendding')
-            set_in_cache(str(self.topics[:15])+'_pendding',
-                         '', 60*60)
-            for i in str(val).split("|"):
-                if len(str(i)) == 0:
-                    continue
-                i = i.split(",")
-                res = self.action(str(i[0]))
-                if res[0]:
-                    ret = {
-                        'txid': str(i[0]),
-                        'callback_id':  str(i[1]),
-                        'status': res[1]
-                    }
-                    producer(self.kafka_servers,
-                             self.topics, ret, self.callback)
-                else:
-                    self.add_id_cache(str(i[0]), str(i[1]))
+            try:
+                val = get_from_cache(str(self.topics[:15])+'_pendding')
+                set_in_cache(str(self.topics[:15])+'_pendding',
+                             '', 60*60)
+                for i in str(val).split("|"):
+                    if len(str(i)) == 0:
+                        continue
+                    i = i.split(",")
+                    res = self.action(str(i[0]))
+                    if res[0]:
+                        ret = {
+                            'txid': str(i[0]),
+                            'callback_id':  str(i[1]),
+                            'status': res[1]
+                        }
+                        producer(self.kafka_servers,
+                                 self.topics, ret, self.callback)
+                    else:
+                        self.add_id_cache(str(i[0]), str(i[1]))
 
-            print("running...")
-            time.sleep(self.block_time)
+                print("running...")
+                time.sleep(int(self.block_time))
+            except Exception as e:
+                print("error: "+e)

@@ -17,9 +17,9 @@ def delivery_report(err, msg):
 
 
 cc = IsConfirm(ret, KAFKA_SERVERS, "test", 2, delivery_report)
-cc()
-print(12)
 cc.add_id_cache("18","198")
+cc.add_id_cache("19","199")
+cc()
 
 cc.add_id_cache("19","199")
 cc.add_id_cache("19","199")
