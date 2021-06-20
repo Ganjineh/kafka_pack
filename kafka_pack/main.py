@@ -1,6 +1,6 @@
 from confluent_kafka import Consumer, KafkaError
 from confluent_kafka import Producer
-from flask import Flask, Response
+from flask import Flask, jsonify
 from .handlers import set_in_cache, get_from_cache, del_from_cache, is_in_cache
 import json
 import time
@@ -34,12 +34,10 @@ class EndpointAction(object):
     def __init__(self, action, endpoint_name):
         self.action = action
         self.endpoint_name = endpoint_name
-        self.response = Response(status=200, headers={})
 
     def __call__(self, address=None, *args):
         res = self.action(address)
-        self.response.response = res
-        return self.response
+        return jsonify(res)
 
 
 class FlaskAppWrapper(object):
