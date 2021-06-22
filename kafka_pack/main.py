@@ -101,4 +101,4 @@ class IsConfirm(object):
                 print("running...")
                 time.sleep(int(self.block_time))
             except Exception as e:
-                print("error: "+e)
+                print("error: "+str(e))
