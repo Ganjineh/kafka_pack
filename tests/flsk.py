@@ -9,7 +9,7 @@ def transaction(address):
     return 'balance'
 
 
-a = FlaskAppWrapper(__name__,debug=False)
+a = FlaskAppWrapper(__name__,debug=False,port=6000)
 a.add_endpoint(endpoint='/balance/<address>', endpoint_name='balance', handler=balance)
 a.add_endpoint(endpoint='/transaction/<address>',
                endpoint_name='transaction', handler=transaction)

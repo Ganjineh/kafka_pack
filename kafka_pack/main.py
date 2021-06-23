@@ -43,13 +43,14 @@ class EndpointAction(object):
 class FlaskAppWrapper(object):
     app = None
 
-    def __init__(self, name, host='0.0.0.0', debug=False):
+    def __init__(self, name, host='0.0.0.0', debug=False, port=5000):
         self.app = Flask(name)
         self.host = host
         self.debug = debug
+        self.port = port
 
     def run(self):
-        self.app.run(host=self.host, debug=self.debug)
+        self.app.run(host=self.host, debug=self.debug, port=self.port)
 
     def add_endpoint(self, endpoint=None, endpoint_name=None, handler=None):
         self.app.add_url_rule(endpoint, endpoint_name,
