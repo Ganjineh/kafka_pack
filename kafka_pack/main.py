@@ -79,9 +79,12 @@ class IsConfirm(object):
     def checking(self):
         while True:
             try:
+                print(1)
                 val = get_from_cache(str(self.topics[:15])+'_pendding')
+                print(2)
                 set_in_cache(str(self.topics[:15])+'_pendding',
                              '', 60*60)
+                print(3)
                 for i in str(val).split("|"):
                     if len(str(i)) == 0:
                         continue
@@ -102,3 +105,4 @@ class IsConfirm(object):
                 time.sleep(int(self.block_time))
             except Exception as e:
                 print("error: "+str(e))
+                time.sleep(1)
