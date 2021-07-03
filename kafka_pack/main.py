@@ -1,6 +1,6 @@
 from confluent_kafka import Consumer, KafkaError
 from confluent_kafka import Producer
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from .handlers import set_in_cache, get_from_cache, del_from_cache, is_in_cache
 import json
 import time
@@ -36,20 +36,25 @@ class EndpointAction(object):
         self.endpoint_name = endpoint_name
 
     def __call__(self, address=None, *args):
-        res = self.action(address)
+        token = request.args.get('token')
+        if token is None:
+            res = self.action(address)
+        else:
+            res = self.action(address, token)
         return jsonify(res)
 
 
 class FlaskAppWrapper(object):
     app = None
 
-    def __init__(self, name, host='0.0.0.0', debug=False):
+    def __init__(self, name, host='0.0.0.0', debug=False, port=5000):
         self.app = Flask(name)
         self.host = host
         self.debug = debug
+        self.port = port
 
     def run(self):
-        self.app.run(host=self.host, debug=self.debug)
+        self.app.run(host=self.host, debug=self.debug, port=self.port)
 
     def add_endpoint(self, endpoint=None, endpoint_name=None, handler=None):
         self.app.add_url_rule(endpoint, endpoint_name,
@@ -102,3 +107,4 @@ class IsConfirm(object):
                 time.sleep(int(self.block_time))
             except Exception as e:
                 print("error: "+str(e))
+                time.sleep(1)
