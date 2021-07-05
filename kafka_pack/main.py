@@ -28,7 +28,9 @@ def producer(servers, topic, msg, callback):
     p.poll(0)
     p.produce(topic, json.dumps(msg), callback=callback)
     try:
-        p.flush(timeout=5)
+        re = p.flush(timeout=10)
+        if re > 0:
+            raise ConnectTimeout
     except:
         raise ConnectTimeout
 
