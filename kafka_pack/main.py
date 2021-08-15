@@ -2,6 +2,7 @@ from confluent_kafka import Consumer, KafkaError
 from confluent_kafka import Producer
 from flask import Flask, jsonify, request
 from .handlers import set_in_cache, get_from_cache, del_from_cache, is_in_cache
+from requests.exceptions import ConnectTimeout
 import json
 import time
 from threading import Thread
@@ -26,8 +27,12 @@ def producer(servers, topic, msg, callback):
     p = Producer({'bootstrap.servers': servers})
     p.poll(0)
     p.produce(topic, json.dumps(msg), callback=callback)
-    p.flush()
-
+    try:
+        re = p.flush(timeout=10)
+        if re > 0:
+            raise ConnectTimeout
+    except:
+        raise ConnectTimeout
 
 class EndpointAction(object):
 
