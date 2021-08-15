@@ -37,7 +37,13 @@ class EndpointAction(object):
 
     def __call__(self, address=None, *args):
         token = request.args.get('token')
-        if token is None:
+        of = request.args.get('from')
+        if of is not None:
+            to = request.args.get('to')
+            fee = request.args.get('fee')
+            amount = request.args.get('amount')
+            res = self.action(of, to, fee, amount)
+        elif token is None:
             res = self.action(address)
         else:
             res = self.action(address, token)
