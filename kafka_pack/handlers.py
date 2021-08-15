@@ -1,6 +1,6 @@
 from pymemcache.client import base
 
-memcache_client = base.Client(('127.0.0.1', 11211))
+memcache_client = base.Client(('0.0.0.0', 11211))
 
 
 def set_in_cache(key, value, ttl):
