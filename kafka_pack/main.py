@@ -34,6 +34,7 @@ def producer(servers, topic, msg, callback):
     except:
         raise ConnectTimeout
 
+
 class EndpointAction(object):
 
     def __init__(self, action, endpoint_name):
@@ -42,12 +43,11 @@ class EndpointAction(object):
 
     def __call__(self, address=None, *args):
         token = request.args.get('token')
-        of = request.args.get('from')
-        if of is not None:
-            to = request.args.get('to')
+        to = request.args.get('to')
+        if to is not None:
             fee = request.args.get('fee')
             amount = request.args.get('amount')
-            res = self.action(of, to, fee, amount)
+            res = self.action(address, to, amount, fee)
         elif token is None:
             res = self.action(address)
         else:
